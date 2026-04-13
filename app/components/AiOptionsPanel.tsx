@@ -132,3 +132,6 @@ export function AiOptionsPanel({
     </div>
   );
 }
+
+// The size difference between the card and the modal caused some layout issues for the cards on the task list 
+// so I wanted to make it bigger but I don't want to make duplicates of the same component so I just extracted it

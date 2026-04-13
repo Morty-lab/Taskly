@@ -12,3 +12,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
+
+
+// I used Firebase for the backend and Firestore for the database as I am familiar 
+// with this tool and it's free given that traffic is low.

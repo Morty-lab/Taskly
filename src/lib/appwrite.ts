@@ -1,8 +1,9 @@
 import { Account, Client, Storage, TablesDB } from "appwrite";
+import { APPWRITE_ENDPOINT, APPWRITE_PROJECT_ID } from "../../shared/appwrite.ts";
 
 // Public identifiers, safe in the bundle. The API key lives only on the Express server.
-const endpoint = import.meta.env.VITE_APPWRITE_ENDPOINT as string | undefined;
-const projectId = import.meta.env.VITE_APPWRITE_PROJECT_ID as string | undefined;
+const endpoint = (import.meta.env.VITE_APPWRITE_ENDPOINT as string | undefined) || APPWRITE_ENDPOINT;
+const projectId = (import.meta.env.VITE_APPWRITE_PROJECT_ID as string | undefined) || APPWRITE_PROJECT_ID;
 
 export const appwriteReady = Boolean(endpoint && projectId);
 if (!appwriteReady) console.error("Appwrite isn't configured: set VITE_APPWRITE_ENDPOINT and VITE_APPWRITE_PROJECT_ID in .env.");

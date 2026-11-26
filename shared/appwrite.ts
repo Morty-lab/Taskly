@@ -1,4 +1,9 @@
 // IDs shared by the browser, the server and the setup script.
+
+// Public project identifiers (they ship in the page bundle anyway). Env vars override them, but the
+// defaults matter on Netlify, where netlify.toml variables exist at build time and not inside functions.
+export const APPWRITE_ENDPOINT = "https://sgp.cloud.appwrite.io/v1";
+export const APPWRITE_PROJECT_ID = "6b07b401003ce48ec508";
 export const DATABASE_ID = "jobscraper";
 export const PROFILES_TABLE = "profiles";
 export const RESUMES_BUCKET = "resumes";

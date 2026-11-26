@@ -14,12 +14,18 @@ export interface Source {
 }
 
 const UA = "job-scraper (personal, low-volume)";
+
+// Netlify's API function has 10 s in total, so it gives each feed 8 s; the scheduled refresh has 30 s.
+let fetchTimeoutMs = 30_000;
+export function setFetchTimeout(ms: number) {
+  fetchTimeoutMs = ms;
+}
 const HOUR = 60 * 60 * 1000;
 
 async function getJson<T>(url: string): Promise<T> {
   const res = await fetch(url, {
     headers: { "User-Agent": UA, Accept: "application/json" },
-    signal: AbortSignal.timeout(30_000),
+    signal: AbortSignal.timeout(fetchTimeoutMs),
   });
   if (!res.ok) throw new Error(`HTTP ${res.status} from ${new URL(url).host}`);
   return (await res.json()) as T;

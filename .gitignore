@@ -8,3 +8,4 @@ data/
 .impeccable/questions/
 .impeccable/e2e.mjs
 .impeccable/admin-shot.mjs
+.impeccable/fn-entry.ts

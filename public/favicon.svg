@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Long brown envelope with its string clasp. Authored for this project. -->
+  <rect x="3" y="7" width="26" height="20" rx="1.5" fill="#a8763f"/>
+  <path d="M3 8.5 16 17l13-8.5" fill="none" stroke="#86592a" stroke-width="1.6"/>
+  <circle cx="16" cy="17" r="2.6" fill="#86592a" stroke="#4a3017" stroke-width=".8"/>
+  <path d="M16 17c-3 3-6 2-7 5" fill="none" stroke="#b3261e" stroke-width="1.4" stroke-linecap="round"/>
+</svg>

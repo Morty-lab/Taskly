@@ -1,0 +1,113 @@
+{
+  "title": "Choose Job Scraper's visual world",
+  "question": "The roll assigned Find-in-Files. Keep it, take an alternate, or re-roll.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Find-in-Files",
+      "kicker": "THE ROLL",
+      "lineage": "a code editor's search panel (grep results)",
+      "thesis": "Your resume is the query: skills sit in the search bar as tokens, and each job is a result whose matched lines are highlighted like hits.",
+      "palette": ["#fbfbf9", "#1b1d1f", "#ffe26a", "#2457c5", "#8a8f94"],
+      "materials": ["editor gutter", "search-hit highlight", "status bar", "mono tokens + sans prose"],
+      "viewport": "A query bar of skill tokens across the top with a live '72 results in 766 postings' readout. Below, results grouped by job: title, company and location, then 1–3 excerpt lines with your skills highlighted, the match count in the gutter. A status bar at the bottom shows boards, last fetch and your account.",
+      "risk": "If it slides into dark-mode-plus-neon it becomes every developer tool; it has to stay a bright, paper-white editor.",
+      "raised": [
+        {"from": "variable-font-specimen", "raise": "Live readout: toggling a skill token re-ranks the list instantly, and the results count updates in place like an axis readout."},
+        {"from": "rw-lexicon-shoulder-and-plate", "raise": "Rank is shown by how much detail a result gets: top matches show their highlighted excerpt lines, lower matches collapse to one line."},
+        {"from": "pop-culture-shelf-character-goods-catalog", "raise": "Switched-off skills and disabled users print in grayscale rather than disappearing."}
+      ],
+      "wireframe": {"cols": 12, "rows": 10, "regions": [
+        {"label": "query bar: skill tokens", "x": 0, "y": 0, "w": 12, "h": 1, "accent": true},
+        {"label": "filters", "x": 0, "y": 1, "w": 3, "h": 8},
+        {"label": "result + hit lines", "x": 3, "y": 1, "w": 9, "h": 3, "accent": true},
+        {"label": "result + hit lines", "x": 3, "y": 4, "w": 9, "h": 2},
+        {"label": "compact results", "x": 3, "y": 6, "w": 9, "h": 3},
+        {"label": "status bar", "x": 0, "y": 9, "w": 12, "h": 1}
+      ]}
+    },
+    {
+      "id": "model-pick",
+      "kicker": "IMPECCABLE’S PICK",
+      "label": "Long Brown Envelope",
+      "lineage": "the Philippine job-application kit",
+      "thesis": "Your profile is the long brown envelope: resume, 2x2 photo, clearances. Jobs are what you slip it toward.",
+      "palette": ["#c89b62", "#f4efe6", "#1f1a14", "#1d4f91"],
+      "materials": ["kraft envelope", "string-and-button clasp", "rubber-stamped dates"],
+      "viewport": "Your envelope on the left with its contents (resume, skills) peeking out; the matched jobs stacked to the right as stamped slips.",
+      "risk": "Instantly recognisable to Filipinos, but the kraft-paper warmth sits close to the overused cream-paper look and can feel nostalgic, not current.",
+      "wireframe": {"cols": 12, "rows": 10, "regions": [
+        {"label": "envelope: profile", "x": 0, "y": 0, "w": 4, "h": 10, "accent": true},
+        {"label": "stamped job slips", "x": 4, "y": 0, "w": 8, "h": 10}
+      ]}
+    },
+    {
+      "id": "challenger-timetable",
+      "label": "Timetable Rack",
+      "verdict": "competitive",
+      "lineage": "1970s pocket airline timetables",
+      "thesis": "One type size everywhere; rank carried by weight, case and reversed plates.",
+      "palette": ["#e0b23a", "#1c1c1c", "#f6f1e1", "#c8361d", "#2f6b45"],
+      "materials": ["goldenrod stock", "tinted acetate", "ruled columns"],
+      "viewport": "Jobs as timetable rows in strict columns (role, company, region, posted, match), the best match reversed into a solid plate.",
+      "case": "Very scannable for a long list, but job seekers don't see themselves in an airline timetable.",
+      "risk": "Goldenrod everywhere is tiring for a daily tool.",
+      "hero": "https://impeccable.style/worlds/cards/rw-timetable-slide-rack-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/rw-timetable-slide-rack.webp"
+    },
+    {
+      "id": "challenger-dense",
+      "label": "High-Density Portal",
+      "verdict": "competitive",
+      "lineage": "Japanese high-density web",
+      "thesis": "Pack far more jobs per screen in boxed, hairline-ruled modules with small red tabs.",
+      "palette": ["#ffffff", "#111111", "#d7261e", "#e6e6e6"],
+      "materials": ["hairline boxes", "tab headers", "badges"],
+      "viewport": "A tiled wall of compact job modules with NEW and PH-OK badges, filters as a tab rail.",
+      "case": "Matches the dense job portals PH users already know; loses on showing why each job matched.",
+      "risk": "Tiny type hurts on phones and for tired eyes.",
+      "hero": "https://impeccable.style/worlds/cards/japanese-high-density-web-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/japanese-high-density-web.webp"
+    },
+    {
+      "id": "challenger-specimen", "label": "Type Specimen", "verdict": "declined",
+      "lineage": "variable-font specimen sites", "thesis": "Drag an axis, the whole page remaps live.",
+      "palette": ["#f7f7f5", "#111111", "#ff4d1f"], "materials": ["flat paper", "axis sliders"],
+      "viewport": "A giant glyph with sliders.", "case": "Nothing to do with job hunting.", "risk": "Decorative.",
+      "kept": "Every control change re-ranks live with a visible readout."
+    },
+    {
+      "id": "challenger-goods", "label": "Character Goods Catalog", "verdict": "declined",
+      "lineage": "mascot popularity catalogs", "thesis": "A ranked pastel grid with name plates.",
+      "palette": ["#fde2e4", "#cde7f0", "#ffffff", "#ff6f91"], "materials": ["pastel grounds", "keylines"],
+      "viewport": "Jobs as mascot cells.", "case": "Too playful for a job search.", "risk": "Unserious.",
+      "kept": "Retired items print in grayscale."
+    },
+    {
+      "id": "challenger-lexicon", "label": "Lexicon Plate", "verdict": "declined",
+      "lineage": "19th-century dictionaries", "thesis": "Entries ranked by how much apparatus each gets.",
+      "palette": ["#1a1a1a", "#efe7d6", "#d4442a"], "materials": ["engraving black", "bordered colour plates"],
+      "viewport": "A dense text column with guide words.", "case": "Reads as a book, not a tool.", "risk": "Antique.",
+      "kept": "Higher-ranked results get more detail."
+    },
+    {
+      "id": "challenger-transit", "label": "Midnight Transit Map", "verdict": "declined",
+      "lineage": "enamel metro diagrams", "thesis": "Routes and interchanges on midnight blue.",
+      "palette": ["#0f1d3a", "#f4f1ea", "#d7322b", "#f2a900"], "materials": ["enamel", "line inks"],
+      "viewport": "Skills as lines, jobs as stations.", "case": "Clever but hides the titles.", "risk": "Hard to scan.",
+      "kept": "A clear state vocabulary: new, open, closed."
+    }
+  ],
+  "reroll": {"registers": ["safer", "bolder"]},
+  "buildPath": {"value": "code", "toggle": false},
+  "canon": true,
+  "canonCard": {
+    "label": "The category standard",
+    "thesis": "A clean job board (LinkedIn Jobs / Indeed class), done impeccably.",
+    "palette": ["#ffffff", "#1f2328", "#0a66c2"],
+    "materials": ["white cards", "left filter rail", "company logos"],
+    "viewport": "Search and location bar on top, filters on the left, job cards in the centre.",
+    "risk": "Looks like every other job board by design."
+  },
+  "steer": true
+}

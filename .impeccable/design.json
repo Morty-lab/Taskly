@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-26T14:30:00+08:00",
+  "title": "Design System: Job Scraper",
+  "extensions": {
+    "colorMeta": {
+      "kraft-ground": { "role": "neutral", "displayName": "Kraft Ground", "canonical": "#a97a45", "tonalRamp": ["#2b1d0e", "#4a3017", "#6f461d", "#8e5f2e", "#a97a45", "#c49a68", "#dcc19b", "#f1e4d1"] },
+      "envelope": { "role": "neutral", "displayName": "Envelope Brown", "canonical": "#8e5f2e", "tonalRamp": ["#2b1a09", "#46290f", "#6f461d", "#8e5f2e", "#a8763f", "#c3965f", "#dcbb8c", "#f2e2c8"] },
+      "long-bond": { "role": "neutral", "displayName": "Long Bond", "canonical": "#ffffff", "tonalRamp": ["#1d1a16", "#3a352f", "#5d554a", "#8a8175", "#b5ada1", "#e3ddd2", "#f3f0ea", "#ffffff"] },
+      "ballpen": { "role": "primary", "displayName": "Ballpen Blue", "canonical": "#1f3c9e", "tonalRamp": ["#0b1640", "#13256a", "#1f3c9e", "#3a58b8", "#6680cc", "#97a9de", "#c7d1ee", "#e8ecf8"] },
+      "stamp-violet": { "role": "secondary", "displayName": "Stamp Violet", "canonical": "#5a2a85", "tonalRamp": ["#22102f", "#3a1b57", "#5a2a85", "#7446a0", "#9372ba", "#b49fd1", "#d6cbe6", "#f1eaf7"] },
+      "string-red": { "role": "tertiary", "displayName": "String Red", "canonical": "#b3261e", "tonalRamp": ["#3d0c09", "#6b1611", "#8f1d17", "#b3261e", "#cf5249", "#e2877f", "#f0bcb7", "#fbeceb"] }
+    },
+    "typographyMeta": {
+      "headline": { "displayName": "Headline", "purpose": "Page titles." },
+      "title": { "displayName": "Title", "purpose": "Job titles and section heads." },
+      "body": { "displayName": "Body", "purpose": "Excerpts, hints, counts (tabular-nums)." },
+      "label": { "displayName": "Caption", "purpose": "Printed form captions, uppercase, 85% width." },
+      "stamp": { "displayName": "Stamp", "purpose": "Every status stamp and the wordmark, 72% width, masked ink grain." },
+      "typed": { "displayName": "Typed", "purpose": "Form entries, skill tabs, emails, dates only." }
+    },
+    "shadows": [
+      { "name": "sheet-on-kraft", "value": "0 1px 1px rgb(58 38 16 / 0.18), 0 8px 18px -6px rgb(58 38 16 / 0.35)", "purpose": "Every white slip." },
+      { "name": "envelope", "value": "0 10px 24px -10px rgb(46 29 12 / 0.6)", "purpose": "The profile envelope." },
+      { "name": "envelope-heavy", "value": "0 18px 40px -16px rgb(46 29 12 / 0.7)", "purpose": "The sign-in envelope." },
+      { "name": "tab", "value": "0 1px 1px rgb(46 29 12 / 0.3)", "purpose": "Skill/role tabs that are on." }
+    ],
+    "motion": [
+      { "name": "stamp-press", "value": "220ms cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "A stamp lands once: from scale 1.35 + 1px blur to its tilt." },
+      { "name": "into-envelope", "value": "420ms cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Resume slip slides down into the envelope after upload." },
+      { "name": "state", "value": "150ms", "purpose": "Hover/focus colour changes." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px", "purpose": "Admin switches from stacked entries to the table." },
+      { "name": "lg", "value": "1024px", "purpose": "Jobs page gains the sticky envelope column; tabs and extra filters unfold." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ballpen blue: anything you act on.",
+      "html": "<button class=\"ds-btn\">View posting</button>",
+      "css": ".ds-btn { background: #1f3c9e; color: #fff; padding: 9px 16px; border: 0; border-radius: 3px; font: 650 14px 'Archivo Variable', system-ui, sans-serif; transition: background 150ms, transform 100ms; } .ds-btn:hover { background: color-mix(in oklab, #1f3c9e 85%, black); } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: 2px solid #1f3c9e; outline-offset: 2px; }"
+    },
+    {
+      "name": "Quiet Button",
+      "kind": "button",
+      "refersTo": "button-quiet",
+      "description": "Outlined in the current ink for secondary actions.",
+      "html": "<button class=\"ds-btn-quiet\">Check for new jobs</button>",
+      "css": ".ds-btn-quiet { background: transparent; color: #1d1a16; padding: 8px 14px; border: 1.5px solid currentColor; border-radius: 3px; font: 600 14px 'Archivo Variable', system-ui, sans-serif; transition: background 150ms; } .ds-btn-quiet:hover { background: rgb(0 0 0 / .05); } .ds-btn-quiet:focus-visible { outline: 2px solid #1f3c9e; outline-offset: 2px; }"
+    },
+    {
+      "name": "Typed Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Typed onto a ruled line.",
+      "html": "<label class=\"ds-cap\">Location<input class=\"ds-field\" placeholder=\"e.g. Cebu City\"></label>",
+      "css": ".ds-cap { display: block; font: 650 11px 'Archivo Variable', sans-serif; font-stretch: 85%; letter-spacing: .08em; text-transform: uppercase; color: #5d554a; } .ds-field { display: block; width: 100%; border: 0; border-bottom: 1.5px solid #e3ddd2; background: transparent; padding: 6px 2px; font: 16px 'Courier Prime', monospace; color: #1d1a16; transition: border-color 150ms; } .ds-field::placeholder { color: #6f665a; } .ds-field:hover { border-bottom-color: color-mix(in oklab, #1f3c9e 40%, #e3ddd2); } .ds-field:focus { outline: none; border-bottom-color: #1f3c9e; }"
+    },
+    {
+      "name": "Status Stamp",
+      "kind": "chip",
+      "description": "Violet rubber-stamp ink for any status.",
+      "html": "<span class=\"ds-stamp\">Open to PH</span>",
+      "css": ".ds-stamp { display: inline-flex; align-items: center; border: 2px solid currentColor; border-radius: 4px; padding: 1px 6px; color: #5a2a85; font: 800 11px 'Archivo Variable', sans-serif; font-stretch: 72%; letter-spacing: .06em; text-transform: uppercase; rotate: -2deg; }"
+    },
+    {
+      "name": "Skill Tab",
+      "kind": "chip",
+      "refersTo": "skill-tab-on",
+      "description": "Typed paper tab on the envelope; off state is dashed and struck through.",
+      "html": "<span class=\"ds-env\"><button class=\"ds-tab\" aria-pressed=\"true\">React</button><button class=\"ds-tab ds-tab-off\" aria-pressed=\"false\">CSS</button></span>",
+      "css": ".ds-env { display: inline-flex; gap: 6px; padding: 12px; background: #8e5f2e; border-radius: 3px; } .ds-tab { padding: 4px 8px; border-radius: 2px; border: 0; background: #fff; color: #1d1a16; font: 13px 'Courier Prime', monospace; box-shadow: 0 1px 1px rgb(46 29 12 / .3); cursor: pointer; } .ds-tab-off { background: transparent; color: #fbf1e2; border: 1px dashed rgb(251 241 226 / .6); box-shadow: none; text-decoration: line-through; } .ds-tab:focus-visible { outline: 2px solid #1f3c9e; outline-offset: 2px; }"
+    },
+    {
+      "name": "Job Slip",
+      "kind": "card",
+      "refersTo": "slip",
+      "description": "Long bond on kraft, stamped with the match.",
+      "html": "<div class=\"ds-desk\"><article class=\"ds-slip\"><span class=\"ds-match\">5/11<small>Match</small></span><h3>Full Stack Developer</h3><p>Acme · Worldwide</p></article></div>",
+      "css": ".ds-desk { background: #a97a45; padding: 24px; } .ds-slip { position: relative; background: #fff; border-radius: 2px; padding: 20px 24px; box-shadow: 0 1px 1px rgb(58 38 16 / .18), 0 8px 18px -6px rgb(58 38 16 / .35); font-family: 'Archivo Variable', sans-serif; color: #1d1a16; } .ds-slip h3 { margin: 0; font-size: 17px; font-weight: 700; } .ds-slip p { margin: 4px 0 0; font-size: 14px; color: #5d554a; } .ds-match { float: right; display: inline-flex; flex-direction: column; align-items: center; border: 2px solid #5a2a85; border-radius: 4px; padding: 2px 8px; color: #5a2a85; font-weight: 800; font-stretch: 72%; font-size: 18px; line-height: 1; rotate: -3deg; } .ds-match small { font-size: 9px; letter-spacing: .14em; text-transform: uppercase; }"
+    },
+    {
+      "name": "Header Band",
+      "kind": "nav",
+      "refersTo": "header-band",
+      "description": "Dark printed band with stamped wordmark and cream nav.",
+      "html": "<nav class=\"ds-band\"><span class=\"ds-mark\">Job Scraper</span><a class=\"ds-nav ds-nav-on\">Jobs</a><a class=\"ds-nav\">Profile</a></nav>",
+      "css": ".ds-band { display: flex; align-items: center; gap: 8px; background: #4a3017; border-bottom: 2px solid #2e1d0c; padding: 12px 24px; font-family: 'Archivo Variable', sans-serif; } .ds-mark { border: 2px solid #f3e6d3; border-radius: 4px; padding: 1px 7px; color: #f3e6d3; font-weight: 800; font-stretch: 72%; letter-spacing: .06em; text-transform: uppercase; rotate: -2deg; margin-right: 16px; } .ds-nav { padding: 6px 10px; border-radius: 3px; color: #f3e6d3; font-size: 14px; font-weight: 600; cursor: pointer; } .ds-nav:hover { background: rgb(255 255 255 / .1); } .ds-nav-on { background: #f3e6d3; color: #4a3017; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Long Brown Envelope",
+    "overview": "Every Filipino job applicant has carried one: the long brown envelope with a string-and-button clasp, holding a resume, a bio-data sheet and a 2x2 photo. The app is that envelope. Kraft paper is the ground and the chrome. Each user's profile is their envelope, with the resume slip sticking out of its mouth. Jobs are white long-bond slips laid on the kraft, and each one is rubber-stamped with how well it matches. The admin reads sign-ups as a logbook of received applications.\n\nThis is an operating surface, so the world lives in its materials and marks, not in decoration. Every page is still a familiar app layout: a header, a profile column and a list. The kraft fibre, the clasp, the stamps and the typed entries are what make it this product. Density is moderate: slips are readable at a glance, and the best match is singled out by one big stamp rather than by colour.",
+    "keyCharacteristics": [
+      "Kraft ground, white paper on top, one ink per job: ballpen blue acts, violet stamps status, red string ties and warns.",
+      "Rubber stamps (condensed caps, ink grain, a slight tilt) carry every status: match, best match, new, open to PH, admin, received.",
+      "Courier Prime appears only where something is typed onto a form: field entries, skill tabs, emails, dates.",
+      "Authored SVG for the clasp, the flap seam and the paper fibre. No stock imagery and no glyph icons."
+    ],
+    "rules": [
+      { "name": "The One Ink, One Job Rule", "body": "Blue acts, violet states, red ties or destroys. A status is never blue and an action is never violet. NEW is violet, not red.", "section": "colors" },
+      { "name": "The Two Browns Rule", "body": "The envelope stays a visible shade deeper than the ground (`envelope` on `kraft-ground`). Text on the envelope is cream; text on the ground is near-black. Never put dark ink on the envelope, because it fails contrast.", "section": "colors" },
+      { "name": "The Typewriter Rule", "body": "Courier is for what was typed onto the form, never for counts, summaries, names in chrome or lists of skills inside running text. Those are Archivo with tabular figures.", "section": "typography" },
+      { "name": "The Paper Stack Rule", "body": "Only paper casts shadows, and the shadow is always brown and offset downward. Controls, stamps and the header are flat; the header is set off by a 2px printed edge, not a shadow.", "section": "elevation" }
+    ],
+    "dos": [
+      "**Do** put every status in a stamp in violet ink, condensed caps with grain and a slight tilt.",
+      "**Do** keep text on the envelope cream (`envelope-ink`) and text on the ground near-black (`kraft-ink`).",
+      "**Do** use Courier Prime only for typed entries, tabs, emails and dates.",
+      "**Do** credit the source board with a followed link on every job, and send \"View posting\" to the original URL.",
+      "**Do** fold secondary controls behind a disclosure on phones so that the first job is visible."
+    ],
+    "donts": [
+      "**Don't** stamp NEW or any status in red. Red is for the string and for destructive actions.",
+      "**Don't** give stamps an opaque fill. The ink sits directly on whatever is underneath, paper or kraft.",
+      "**Don't** turn slips into cards with icon headers, coloured side borders or hover lifts.",
+      "**Don't** use hard offset (zero-blur) shadows. The header's edge is a 2px border.",
+      "**Don't** use emoji or Unicode glyphs as icons. Use Lucide or authored SVG."
+    ]
+  }
+}

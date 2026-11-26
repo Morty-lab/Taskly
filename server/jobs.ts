@@ -1,74 +1,88 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import path from "node:path";
 import type { ScoredJob, SearchRequest, SearchResponse, Snippet, SourceStatus } from "../shared/types.ts";
+import { cacheStore } from "./cache-store.ts";
 import { matcherFor } from "./skills.ts";
 import { SOURCES, toText, type RawJob, type Source } from "./sources.ts";
 
-// Jobs are fetched in bulk per source and cached on disk, then matched locally. Every search runs
-// against the cache, so typing in the UI never sends a request to a job site.
+// Jobs are fetched in bulk per source and cached (a file locally, Netlify Blobs in production), then
+// matched in memory. Searches never wait on a job site unless the cache is badly out of date: a
+// scheduled function (netlify/functions/refresh-jobs.ts) keeps it fresh in production.
 
-const CACHE_FILE = path.resolve("data", "cache.json");
+/** The scheduled refresh refetches anything older than this (Remotive asks for at most ~4 fetches a day). */
 const STALE_AFTER = 6 * 60 * 60 * 1000;
+/** A search only fetches itself when the cache is this old, i.e. the scheduled refresh isn't running. */
+const SEARCH_STALE_AFTER = 12 * 60 * 60 * 1000;
 
 interface Entry {
   fetchedAt: string | null;
   jobs: RawJob[];
   error: string | null;
+  failedAt?: string | null;
 }
 
+const RETRY_FAILED_AFTER = 15 * 60 * 1000;
+
 let cache: Record<string, Entry> = {};
-let loaded = false;
+let loadedAt = 0;
 let inflight: Promise<void> | null = null;
 
-async function load() {
-  if (loaded) return;
-  loaded = true;
+/** Read the shared cache. Re-read when this copy is older than a minute, since another instance may have refreshed it. */
+async function load(force = false) {
+  if (!force && Date.now() - loadedAt < 60_000) return;
+  loadedAt = Date.now();
   try {
-    cache = JSON.parse(await readFile(CACHE_FILE, "utf8"));
-    // Re-clean saved text so cleanup fixes apply without refetching (Remotive allows ~4 fetches a day).
+    const raw = await cacheStore().read();
+    if (!raw) return;
+    cache = JSON.parse(raw);
+    // Re-clean saved text so cleanup fixes apply without refetching.
     for (const e of Object.values(cache))
       for (const j of e.jobs) {
         j.body = toText(j.body);
         j.excerpt = j.body.length > 300 ? `${j.body.slice(0, 297).trimEnd()}…` : j.body;
       }
-  } catch {
-    cache = {}; // first run, or an unreadable cache: refetch
+  } catch (err) {
+    console.warn("Couldn't read the job cache; refetching:", err instanceof Error ? err.message : err);
   }
 }
 
 async function save() {
-  await mkdir(path.dirname(CACHE_FILE), { recursive: true });
-  await writeFile(CACHE_FILE, JSON.stringify(cache));
+  await cacheStore().write(JSON.stringify(cache));
 }
 
 const age = (e?: Entry) => (e?.fetchedAt ? Date.now() - Date.parse(e.fetchedAt) : Infinity);
 
-function due(source: Source, force: boolean) {
-  const a = age(cache[source.id]);
-  return a > STALE_AFTER || (force && a > source.minIntervalMs);
+function due(source: Source, force: boolean, staleAfter: number) {
+  const e = cache[source.id];
+  // A source that just failed (often a timeout) waits a little before the next try.
+  if (e?.failedAt && Date.now() - Date.parse(e.failedAt) < RETRY_FAILED_AFTER) return false;
+  const a = age(e);
+  return a > staleAfter || (force && a > source.minIntervalMs);
 }
 
 async function refreshOne(source: Source) {
   const prev = cache[source.id];
   try {
     const jobs = await source.fetch();
-    cache[source.id] = { fetchedAt: new Date().toISOString(), jobs, error: null };
+    cache[source.id] = { fetchedAt: new Date().toISOString(), jobs, error: null, failedAt: null };
   } catch (err) {
-    // Keep serving the last good copy, but don't hammer a failing source: retry after its interval.
+    // Keep serving the last good copy and its timestamp, so the source is retried soon (not in 6 h).
     cache[source.id] = {
-      fetchedAt: new Date().toISOString(),
+      fetchedAt: prev?.fetchedAt ?? null,
       jobs: prev?.jobs ?? [],
       error: err instanceof Error ? err.message : String(err),
+      failedAt: new Date().toISOString(),
     };
     console.warn(`[${source.id}] fetch failed:`, cache[source.id].error);
   }
 }
 
-/** Fetch every source whose cache is stale (or, when forced, older than its minimum interval). */
-export async function refresh(force = false) {
-  await load();
+/**
+ * Fetch every source whose cache is older than `staleAfter` (or, when forced by the "Check for new
+ * jobs" button, older than that source's own minimum interval).
+ */
+export async function refresh(force = false, staleAfter = STALE_AFTER) {
+  await load(true);
   if (inflight) return inflight;
-  const todo = SOURCES.filter((s) => due(s, force));
+  const todo = SOURCES.filter((s) => due(s, force, staleAfter));
   if (!todo.length) return;
   inflight = Promise.all(todo.map(refreshOne))
     .then(save)
@@ -136,7 +150,8 @@ function snippetsFor(job: RawJob, skills: { name: string; re: RegExp }[], matche
 }
 
 export async function search(req: SearchRequest): Promise<SearchResponse> {
-  await refresh();
+  await load();
+  if (SOURCES.some((src) => due(src, false, SEARCH_STALE_AFTER))) await refresh(false, SEARCH_STALE_AFTER);
   const skills = [...new Set(req.skills)].map((name) => ({ name, re: matcherFor(name) }));
   const roles = [...new Set(req.roles)].map((name) => ({ name, re: matcherFor(name) }));
 

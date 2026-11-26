@@ -2,6 +2,8 @@ import type { NextFunction, Request, Response } from "express";
 import { Account, Client, Query, Storage, TablesDB, Users, type Models } from "node-appwrite";
 import {
   ADMIN_LABEL,
+  APPWRITE_ENDPOINT,
+  APPWRITE_PROJECT_ID,
   DATABASE_ID,
   PROFILES_TABLE,
   RESUMES_BUCKET,
@@ -10,8 +12,8 @@ import {
   type ProfileRow,
 } from "../shared/appwrite.ts";
 
-const endpoint = process.env.VITE_APPWRITE_ENDPOINT ?? "";
-const projectId = process.env.VITE_APPWRITE_PROJECT_ID ?? "";
+const endpoint = process.env.VITE_APPWRITE_ENDPOINT || APPWRITE_ENDPOINT;
+const projectId = process.env.VITE_APPWRITE_PROJECT_ID || APPWRITE_PROJECT_ID;
 const apiKey = process.env.APPWRITE_API_KEY ?? "";
 
 export const appwriteConfigured = Boolean(endpoint && projectId && apiKey);

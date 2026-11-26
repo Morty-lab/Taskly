@@ -14,6 +14,31 @@ npm run dev            # API on :3001 + app on http://localhost:5173
 
 `npm run build && npm start` serves the built app and the API together on http://127.0.0.1:3001.
 
+## Deploying on Netlify
+
+`netlify.toml` holds the whole setup and overrides the site's UI build settings:
+
+- **Pages:** `npm run build` on Node 22, published from `dist`, with every non-API path served `index.html`.
+- **API:** `/api/*` is rewritten to one function, [netlify/functions/api.ts](netlify/functions/api.ts), which runs the
+  same Express app as `npm run dev` (via `serverless-http`).
+- **Job cache:** stored in Netlify Blobs (store `job-cache`) instead of `data/cache.json`.
+  [netlify/functions/refresh-jobs.ts](netlify/functions/refresh-jobs.ts) runs hourly and refetches any feed
+  older than 6 hours, so searches never wait on a job site. Scheduled functions only run on the
+  published production deploy. On previews, the first search fills the cache itself.
+
+One-time setup in the Netlify UI (**Site configuration → Environment variables**):
+
+1. Add `APPWRITE_API_KEY` (the same key as in `.env`), scoped to **Functions**. Without it, the admin page,
+   account deletion and file downloads return 503.
+2. Delete the old Taskly variables (`VITE_FIREBASE_*`, `VITE_GEMINI_API_KEY`). The Gemini key was shipped in the
+   old bundle, so rotate it in Google AI Studio too.
+
+In the Appwrite console, add the site's hostname (e.g. `task1y.netlify.app`) as a **Web platform**, or sign-in
+is rejected. Add a second one for deploy previews if you use them.
+
+Limits that come with Netlify Functions: uploads are capped at 4 MB (the 6 MB request limit, minus base64
+overhead), and each API request has 10 seconds.
+
 ## Appwrite setup
 
 The project is `Taskly` (`6b07b401003ce48ec508`) on `https://sgp.cloud.appwrite.io/v1`. In the console:
@@ -40,7 +65,7 @@ or delete users (deleting also removes their profile and resume).
 
 ## How it works
 
-1. **Resume** (`POST /api/resume`): PDF, DOCX or TXT, up to 10 MB. The server extracts the text in
+1. **Resume** (`POST /api/resume`): PDF, DOCX or TXT, up to 4 MB. The server extracts the text in
    memory (unpdf / mammoth, keeping line breaks) and returns:
    - **skills and roles**, matched against the dictionary
    - **details** ([server/details.ts](server/details.ts)), using heuristics and no AI: name (first name-like
@@ -59,8 +84,8 @@ or delete users (deleting also removes their profile and resume).
    JWT. The server only returns a file to the user its Appwrite permissions name, or to an admin. That
    avoids Appwrite's third-party session cookie, which some browsers block. Only JPEG/PNG/WebP are
    served inline; everything else is sent as a download.
-4. **Jobs**: the server downloads each board's public feed in bulk and caches it in `data/cache.json`
-   for 6 hours. Searching runs against that cache, so it never hits the job sites. "Check for new jobs"
+4. **Jobs**: the server downloads each board's public feed in bulk and caches it (`data/cache.json` locally,
+   Netlify Blobs in production) for 6 hours. Searching runs against that cache, so it never hits the job sites. "Check for new jobs"
    refetches any board whose copy is older than its minimum interval (Remotive 6 h, others 1 h).
 5. **Ranking** (`POST /api/jobs/search`): each selected skill scores 3 if it's in the job title,
    2 in the tags (1 if the posting has more than 15 tags), and 1 in the description. A selected role in
@@ -81,7 +106,8 @@ scraping and they block it.
 ## Layout
 
 ```
-server/   Express API: index.ts (routes), appwrite.ts (auth checks, admin, file access), resume.ts (parsing),
+netlify/  functions/api.ts (the API as a Netlify Function), functions/refresh-jobs.ts (hourly feed refresh)
+server/   Express API: app.ts (routes), index.ts (local server), cache-store.ts (file or Netlify Blobs), appwrite.ts (auth checks, admin, file access), resume.ts (parsing),
           details.ts (name/title/location/years/phone/links/education from resume text),
           skills.ts (dictionary + matching), sources.ts (one adapter per board), jobs.ts (cache + scoring)
 shared/   types and Appwrite IDs used by both sides
